@@ -1,0 +1,27 @@
+services:
+  api:
+    build: .
+    container_name: device_api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Host=db;Port=5432;Database=devicesdb;Username=postgres;Password=postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: device_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devicesdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
