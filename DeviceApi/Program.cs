@@ -48,5 +48,13 @@ app.MapPost("/devices/", async (DeviceCreateDTO deviceCreateDTO, AppDbContext db
     return Results.Created($"/devices/{device.Id}", device);
 });
 
+app.MapGet("/devices/{id:int}", async (int id, AppDbContext db) =>
+{
+    return await db.Devices.FindAsync(id)
+         is Device device
+                     ? Results.Ok(device)
+                      : Results.NotFound();
+});
+
 
 app.Run();
