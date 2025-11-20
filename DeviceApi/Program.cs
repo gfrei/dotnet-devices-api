@@ -1,4 +1,5 @@
 using DeviceApi.Data;
+using DeviceApi.Dtos;
 using DeviceApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,8 +29,19 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/devices/", async (Device device, AppDbContext db) =>
+app.MapPost("/devices/", async (DeviceCreateDTO deviceCreateDTO, AppDbContext db) =>
 {
+    DateTime localDateTime = DateTime.Now;
+    DateTime utcDateTime = localDateTime.ToUniversalTime();
+
+    Device device = new Device
+    {
+        Name = deviceCreateDTO.Name,
+        Brand = deviceCreateDTO.Brand,
+        State = deviceCreateDTO.State,
+        CreationTime = utcDateTime,
+    };
+
     db.Devices.Add(device);
     await db.SaveChangesAsync();
 
