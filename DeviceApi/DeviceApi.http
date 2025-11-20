@@ -1,6 +1,8 @@
-@DeviceApi_HostAddress = http://localhost:5062
+POST http://localhost:8080/devices
+Content-Type: application/json
 
-GET {{DeviceApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+{
+    "name": "Z",
+    "brand": "Moto",
+    "state": "Active"
+}
