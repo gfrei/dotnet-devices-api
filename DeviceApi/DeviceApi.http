@@ -6,3 +6,7 @@ Content-Type: application/json
     "brand": "Moto",
     "state": "Active"
 }
+
+###
+
+GET http://localhost:8080/devices/1
