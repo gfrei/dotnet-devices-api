@@ -1,4 +1,5 @@
 using DeviceApi.Data;
+using DeviceApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,5 +27,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapPost("/devices/", async (Device device, AppDbContext db) =>
+{
+    db.Devices.Add(device);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/devices/{device.Id}", device);
+});
+
 
 app.Run();
