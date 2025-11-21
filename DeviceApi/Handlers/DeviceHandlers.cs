@@ -3,9 +3,9 @@ using DeviceApi.Dtos;
 using DeviceApi.Models;
 using DeviceApi.Services;
 
-namespace DeviceApi.Endpoints
+namespace DeviceApi.Handlers
 {
-    public static class DeviceEndpoints
+    public static class DeviceHandlers
     {
         public static RouteGroupBuilder MapDeviceEndpoints(this IEndpointRouteBuilder routes)
         {

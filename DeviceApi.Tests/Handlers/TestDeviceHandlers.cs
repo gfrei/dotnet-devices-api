@@ -1,6 +1,6 @@
 using DeviceApi.Data;
 using DeviceApi.Dtos;
-using DeviceApi.Endpoints;
+using DeviceApi.Handlers;
 using DeviceApi.Models;
 using DeviceApi.Services;
 using DeviceApi.Tests.Helpers;
@@ -24,7 +24,7 @@ namespace DeviceApi.Tests.Handlers
                 .ReturnsAsync(device);
 
             // Act
-            var result = await DeviceEndpoints.GetDeviceById(mockService.Object, device.Id);
+            var result = await DeviceHandlers.GetDeviceById(mockService.Object, device.Id);
             var httpResult = Assert.IsType<Ok<Device>>(result);
 
             // Assert
@@ -42,7 +42,7 @@ namespace DeviceApi.Tests.Handlers
                 .ReturnsAsync((Device?) null);
 
             // Act
-            var result = await DeviceEndpoints.GetDeviceById(mockService.Object, 0);
+            var result = await DeviceHandlers.GetDeviceById(mockService.Object, 0);
 
             // Assert
             Assert.IsType<NotFound>(result);
@@ -62,7 +62,7 @@ namespace DeviceApi.Tests.Handlers
                 .ReturnsAsync(createdDevice);
 
             // Act
-            var result = await DeviceEndpoints.CreateDevice(mockService.Object, dto);
+            var result = await DeviceHandlers.CreateDevice(mockService.Object, dto);
             var httpResult = Assert.IsType<Created<Device>>(result);
 
             // Assert

@@ -1,6 +1,6 @@
 using DeviceApi.Data;
 using DeviceApi.Dtos;
-using DeviceApi.Endpoints;
+using DeviceApi.Handlers;
 using DeviceApi.Models;
 using DeviceApi.Services;
 using Microsoft.EntityFrameworkCore;
