@@ -59,4 +59,26 @@ public class TestDeviceService
         // Assert
         Assert.Null(result);
     }
+
+    [Fact]
+    public async Task CreateAsync_AddNewDevice()
+    {
+        // Arrange
+        var db = TestHelpers.CreateInMemoryDb();
+        var device = GetTestDevice();
+        var service = new DeviceService(db);
+
+        // Act
+        await service.CreateAsync(device);
+        
+        // Assert
+        var savedDevice = await db.FindAsync<Device>(device.Id);
+
+        Assert.NotNull(savedDevice);
+        Assert.Equal(savedDevice.Id, device.Id);
+        Assert.Equal(savedDevice.Name, device.Name);
+        Assert.Equal(savedDevice.Brand, device.Brand);
+        Assert.Equal(savedDevice.State, device.State);
+        Assert.Equal(device.CreationTime, device.CreationTime);
+    }
 }
