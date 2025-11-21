@@ -13,6 +13,24 @@ namespace DeviceApi.Tests.Handlers
     public class TestDeviceHandlers
     {
        [Fact]
+        public async Task GetDeviceById_Ok()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            var device = GenerateDeviceResult();
+            
+            mockService
+                .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(device);
+
+            // Act
+            var result = await DeviceEndpoints.GetDeviceById(mockService.Object, device.Id);
+            var httpResult = Assert.IsType<Ok<Device>>(result);
+
+            // Assert
+            Assert.Equal(device, httpResult.Value);
+        }
+       [Fact]
         public async Task CreateDevice_Ok()
         {
             // Arrange
