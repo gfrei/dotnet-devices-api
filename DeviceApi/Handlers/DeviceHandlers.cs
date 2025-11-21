@@ -12,6 +12,7 @@ namespace DeviceApi.Handlers
             var group = routes.MapGroup("/devices");
 
             group.MapGet("/{id:int}", GetDeviceById);
+            group.MapGet("/", GetAllDevices);
             group.MapPost("/", CreateDevice);
 
             return group;
@@ -24,6 +25,13 @@ namespace DeviceApi.Handlers
             return device is not null 
                 ? Results.Ok(device)
                 : Results.NotFound();
+        }
+
+        public static async Task<IResult> GetAllDevices(IDeviceService service)
+        {
+            var devices = await service.GetAllAsync();
+
+            return Results.Ok(devices);
         }
         
         public static async Task<IResult> CreateDevice(IDeviceService service, DeviceCreateDTO deviceCreateDTO)
