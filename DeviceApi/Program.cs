@@ -1,5 +1,6 @@
 using DeviceApi.Data;
 using DeviceApi.Dtos;
+using DeviceApi.Endpoints;
 using DeviceApi.Models;
 using DeviceApi.Services;
 using Microsoft.EntityFrameworkCore;
@@ -31,33 +32,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
-app.MapPost("/devices/", async (IDeviceService service, DeviceCreateDTO deviceCreateDTO) =>
-{
-    DateTime localDateTime = DateTime.Now;
-    DateTime utcDateTime = localDateTime.ToUniversalTime();
-
-    Device device = new Device
-    {
-        Name = deviceCreateDTO.Name,
-        Brand = deviceCreateDTO.Brand,
-        State = deviceCreateDTO.State,
-        CreationTime = utcDateTime,
-    };
-
-    await service.CreateAsync(device);
-    
-    return Results.Created($"/devices/{device.Id}", device);
-});
-
-app.MapGet("/devices/{id:int}", async (IDeviceService service, int id) =>
-{
-    var device = await service.GetByIdAsync(id);
-
-    return device is not null 
-        ? Results.Ok(device)
-        : Results.NotFound();
-});
-
+app.MapDeviceEndpoints();
 
 app.Run();
