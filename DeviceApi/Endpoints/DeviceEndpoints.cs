@@ -28,20 +28,17 @@ namespace DeviceApi.Endpoints
         
         public static async Task<IResult> CreateDevice(IDeviceService service, DeviceCreateDTO deviceCreateDTO)
         {
-            DateTime localDateTime = DateTime.Now;
-            DateTime utcDateTime = localDateTime.ToUniversalTime();
-
             Device device = new Device
             {
                 Name = deviceCreateDTO.Name,
                 Brand = deviceCreateDTO.Brand,
                 State = deviceCreateDTO.State,
-                CreationTime = utcDateTime,
+                CreationTime = DateTime.UtcNow,
             };
 
-            await service.CreateAsync(device);
+            var created = await service.CreateAsync(device);
             
-            return Results.Created($"/devices/{device.Id}", device);
+            return Results.Created($"/devices/{created.Id}", created);
         }
     }
 }
