@@ -80,6 +80,28 @@ namespace DeviceApi.Tests.Services
             Assert.NotNull(devices);
             Assert.Empty(devices);
         }
+        
+        [Fact]
+        public async Task GetAllAsync_SingleEntry()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+            var device = GetTestDevice();
+
+            db.Devices.Add(device);
+            await db.SaveChangesAsync();
+
+            // Act
+            var devices = await service.GetAllAsync();
+            
+            // Assert
+            Assert.NotNull(devices);
+            Assert.Single(devices);
+            
+            var returned = devices.First();
+            AssertEqualDevices(device, returned);
+        }
 
         // Aux
         private Device GetTestDevice(int id = 1)
