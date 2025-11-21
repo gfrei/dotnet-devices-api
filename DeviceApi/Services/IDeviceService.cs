@@ -6,5 +6,6 @@ namespace DeviceApi.Services
     {
         Task<Device?> GetByIdAsync(int id);
         Task<Device> CreateAsync(Device device);
+        Task<IEnumerable<Device>> GetAllAsync();
     }
 }

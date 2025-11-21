@@ -26,5 +26,10 @@ namespace DeviceApi.Services
             await dbContext.SaveChangesAsync();
             return device;
         }
+
+        public async Task<IEnumerable<Device>> GetAllAsync()
+        {
+            return await dbContext.Devices.ToListAsync();
+        }
     }
 }
