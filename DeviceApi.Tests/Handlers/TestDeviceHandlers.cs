@@ -30,6 +30,24 @@ namespace DeviceApi.Tests.Handlers
             // Assert
             Assert.Equal(device, httpResult.Value);
         }
+        
+       [Fact]
+        public async Task GetDeviceById_NotFound()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            
+            mockService
+                .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((Device?) null);
+
+            // Act
+            var result = await DeviceEndpoints.GetDeviceById(mockService.Object, 0);
+
+            // Assert
+            Assert.IsType<NotFound>(result);
+        }
+
        [Fact]
         public async Task CreateDevice_Ok()
         {
