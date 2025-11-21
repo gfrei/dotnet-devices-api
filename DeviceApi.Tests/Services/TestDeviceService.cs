@@ -66,6 +66,21 @@ namespace DeviceApi.Tests.Services
             AssertEqualDevices(savedDevice, device);
         }
 
+        [Fact]
+        public async Task GetAllAsync_NoData()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            // Act
+            var devices = await service.GetAllAsync();
+            
+            // Assert
+            Assert.NotNull(devices);
+            Assert.Empty(devices);
+        }
+
         // Aux
         private Device GetTestDevice(int id = 1)
         {
