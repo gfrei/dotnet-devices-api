@@ -1,6 +1,7 @@
 using DeviceApi.Data;
 using DeviceApi.Dtos;
 using DeviceApi.Models;
+using DeviceApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddOpenApi();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddScoped<IDeviceService, DeviceService>();
 
 var app = builder.Build();
 
@@ -29,7 +31,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapPost("/devices/", async (DeviceCreateDTO deviceCreateDTO, AppDbContext db) =>
+
+app.MapPost("/devices/", async (IDeviceService service, DeviceCreateDTO deviceCreateDTO) =>
 {
     DateTime localDateTime = DateTime.Now;
     DateTime utcDateTime = localDateTime.ToUniversalTime();
@@ -42,18 +45,18 @@ app.MapPost("/devices/", async (DeviceCreateDTO deviceCreateDTO, AppDbContext db
         CreationTime = utcDateTime,
     };
 
-    db.Devices.Add(device);
-    await db.SaveChangesAsync();
-
+    await service.CreateAsync(device);
+    
     return Results.Created($"/devices/{device.Id}", device);
 });
 
-app.MapGet("/devices/{id:int}", async (int id, AppDbContext db) =>
+app.MapGet("/devices/{id:int}", async (IDeviceService service, int id) =>
 {
-    return await db.Devices.FindAsync(id)
-         is Device device
-                     ? Results.Ok(device)
-                      : Results.NotFound();
+    var device = await service.GetByIdAsync(id);
+
+    return device is not null 
+        ? Results.Ok(device)
+        : Results.NotFound();
 });
 
 
