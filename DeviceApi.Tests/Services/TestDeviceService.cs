@@ -70,9 +70,9 @@ namespace DeviceApi.Tests.Services
         private Device GetTestDevice()
         {
             return new Device { 
-                Name = "Edge 30",
-                Brand = "Morotola",
-                State = "in-use",
+                Name = "name",
+                Brand = "brand",
+                State = "state",
                 CreationTime = DateTime.UtcNow
             };
         }
