@@ -67,9 +67,10 @@ namespace DeviceApi.Tests.Services
         }
 
         // Aux
-        private Device GetTestDevice()
+        private Device GetTestDevice(int id = 1)
         {
-            return new Device { 
+            return new Device {
+                Id = id,
                 Name = "name",
                 Brand = "brand",
                 State = "state",
