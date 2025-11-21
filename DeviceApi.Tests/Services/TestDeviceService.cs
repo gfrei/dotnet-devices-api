@@ -102,6 +102,31 @@ namespace DeviceApi.Tests.Services
             var returned = devices.First();
             AssertEqualDevices(device, returned);
         }
+        
+        [Fact]
+        public async Task GetAllAsync_ManyEntries()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device1 = GetTestDevice(1);
+            var device2 = GetTestDevice(2);
+            var device3 = GetTestDevice(3);
+
+            db.Devices.Add(device1);
+            db.Devices.Add(device2);
+            db.Devices.Add(device3);
+
+            await db.SaveChangesAsync();
+
+            // Act
+            var devices = await service.GetAllAsync();
+            
+            // Assert
+            Assert.NotNull(devices);
+            Assert.Equal(3, devices.Count());
+        }
 
         // Aux
         private Device GetTestDevice(int id = 1)
