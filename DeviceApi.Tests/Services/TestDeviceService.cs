@@ -70,11 +70,11 @@ namespace DeviceApi.Tests.Services
         private Device GetTestDevice()
         {
             return new Device { 
-                Id = 1, 
                 Name = "Edge 30",
                 Brand = "Morotola",
                 State = "in-use",
-                CreationTime = DateTime.UtcNow };
+                CreationTime = DateTime.UtcNow
+            };
         }
 
         private void AssertEqualDevices(Device deviceA, Device deviceB)
