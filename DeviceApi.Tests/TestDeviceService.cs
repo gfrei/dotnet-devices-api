@@ -7,16 +7,6 @@ using Xunit;
 
 public class TestDeviceService
 {
-    private Device GetTestDevice()
-    {
-        return new Device { 
-            Id = 1, 
-            Name = "Edge 30",
-            Brand = "Morotola",
-            State = "in-use",
-            CreationTime = DateTime.UtcNow };
-    }
-
     [Fact]
     public async Task GetByIdAsync_ShouldReturnDevice_ThatExists()
     {
@@ -31,14 +21,10 @@ public class TestDeviceService
 
         // Act
         var result = await service.GetByIdAsync(device.Id);
-        
+
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(device.Id, result.Id);
-        Assert.Equal(device.Name, result.Name);
-        Assert.Equal(device.Brand, result.Brand);
-        Assert.Equal(device.State, result.State);
-        Assert.Equal(device.CreationTime, result.CreationTime);
+        AssertEqualDevices(device, result);
     }
 
     [Fact]
@@ -75,10 +61,26 @@ public class TestDeviceService
         var savedDevice = await db.FindAsync<Device>(device.Id);
 
         Assert.NotNull(savedDevice);
-        Assert.Equal(savedDevice.Id, device.Id);
-        Assert.Equal(savedDevice.Name, device.Name);
-        Assert.Equal(savedDevice.Brand, device.Brand);
-        Assert.Equal(savedDevice.State, device.State);
-        Assert.Equal(device.CreationTime, device.CreationTime);
+        AssertEqualDevices(savedDevice, device);
+    }
+
+    // Aux
+    private Device GetTestDevice()
+    {
+        return new Device { 
+            Id = 1, 
+            Name = "Edge 30",
+            Brand = "Morotola",
+            State = "in-use",
+            CreationTime = DateTime.UtcNow };
+    }
+
+    private void AssertEqualDevices(Device deviceA, Device deviceB)
+    {
+        Assert.Equal(deviceA.Id, deviceB.Id);
+        Assert.Equal(deviceA.Name, deviceB.Name);
+        Assert.Equal(deviceA.Brand, deviceB.Brand);
+        Assert.Equal(deviceA.State, deviceB.State);
+        Assert.Equal(deviceA.CreationTime, deviceB.CreationTime);
     }
 }
