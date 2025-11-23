@@ -11,9 +11,11 @@ namespace DeviceApi.Handlers
         {
             var group = routes.MapGroup("/devices");
 
-            group.MapGet("/{id:int}", GetDeviceById);
             group.MapGet("/", QueryDevices);
+            group.MapGet("/{id:int}", GetDeviceById);
+
             group.MapPost("/", CreateDevice);
+            
             group.MapDelete("/{id:int}", DeleteDeviceById);
 
             return group;
