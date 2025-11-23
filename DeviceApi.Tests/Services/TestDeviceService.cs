@@ -86,5 +86,22 @@ namespace DeviceApi.Tests.Services
             Assert.True(ok);
             Assert.Null(deletedDevice);
         }
+
+        [Fact]
+        public async Task DeleteAsync_ElementDoesNotExist_Ok()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            // Act
+            bool ok = await service.DeleteAsync(1);
+            
+            // Assert
+            var deletedDevice = await db.FindAsync<Device>(1);
+
+            Assert.False(ok);
+            Assert.Null(deletedDevice);
+        }
     }
 }
