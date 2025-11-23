@@ -71,6 +71,25 @@ namespace DeviceApi.Tests.Handlers
         }
 
        [Fact]
+        public async Task CreateDevice_StateNotValid()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+
+            var dto = GenerateTestDeviceCreateDTO();
+            var createdDevice = TestHelpers.GetTestDevice();
+
+            mockService
+                .Setup(s => s.CreateAsync(It.IsAny<Device>()));
+
+            // Act
+            var result = await DeviceHandlers.CreateDevice(mockService.Object, dto);
+
+            // Assert
+            Assert.IsType<BadRequest<string>>(result);
+        }
+
+       [Fact]
         public async Task QueryDevices_Ok()
         {
             // Arrange
