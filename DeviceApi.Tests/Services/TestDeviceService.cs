@@ -53,7 +53,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = TestHelpers.GetTestDevice(state: "Available");
+            var device = TestHelpers.GetTestDevice(state: DeviceStates.Available);
             var service = new DeviceService(db);
 
             // Act
@@ -71,7 +71,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = TestHelpers.GetTestDevice(state: "InUse");
+            var device = TestHelpers.GetTestDevice(state: DeviceStates.InUse);
             var service = new DeviceService(db);
 
             // Act
@@ -89,7 +89,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = TestHelpers.GetTestDevice(state: "Inactive");
+            var device = TestHelpers.GetTestDevice(state: DeviceStates.Inactive);
             var service = new DeviceService(db);
 
             // Act
@@ -162,7 +162,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = TestHelpers.GetTestDevice(state: "in use"); //TODO: refactor state
+            var device = TestHelpers.GetTestDevice(state: DeviceStates.InUse);
             db.Devices.Add(device);
             await db.SaveChangesAsync();
             

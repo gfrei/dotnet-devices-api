@@ -23,9 +23,9 @@ namespace DeviceApi.Services
         public async Task<Device?> CreateAsync(Device device)
         {
             
-            if (device.State != "Available" 
-                && device.State != "InUse" 
-                && device.State != "Inactive")
+            if (device.State != DeviceStates.Available 
+                && device.State != DeviceStates.Inactive
+                && device.State != DeviceStates.InUse)
             {
                 return null;
             }
@@ -44,7 +44,7 @@ namespace DeviceApi.Services
             if (device is null)
                 return DeleteResult.NotFound;
 
-            if (device.State == "in use") //TODO: refactor state
+            if (device.State == DeviceStates.InUse)
                 return DeleteResult.NowAllowed;
 
             dbContext.Devices.Remove(device);
