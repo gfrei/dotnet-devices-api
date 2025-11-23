@@ -15,6 +15,8 @@ namespace DeviceApi.Handlers
             group.MapGet("/{id:int}", GetDeviceById);
 
             group.MapPost("/", CreateDevice);
+
+            group.MapPut("/{id:int}", UpdateDevice);
             
             group.MapDelete("/{id:int}", DeleteDeviceById);
 
@@ -57,8 +59,30 @@ namespace DeviceApi.Handlers
             var created = await service.CreateAsync(device);
 
             return created is null
-                ? Results.BadRequest($"State should be {DeviceStates.Available}, {DeviceStates.InUse}, or {DeviceStates.Inactive},")
+                ? Results.BadRequest($"State should be {DeviceStates.Available}, {DeviceStates.InUse}, or {DeviceStates.Inactive}.")
                 : Results.Created($"/devices/{created.Id}", created);
         }
+
+        public static async Task<IResult> UpdateDevice(IDeviceService service, int id, DeviceUpdateDTO deviceUpdateDTO)
+        {
+            Device update = new Device
+            {
+                Id = id,
+                Name = deviceUpdateDTO.Name,
+                Brand = deviceUpdateDTO.Brand,
+                State = deviceUpdateDTO.State,
+            };
+
+            var status = await service.UpdateAsync(id, update);
+
+            return status switch
+            {
+                UpdateResult.NotFound => Results.NotFound(),
+                UpdateResult.InvalidState => Results.BadRequest($"State should be {DeviceStates.Available}, {DeviceStates.InUse}, or {DeviceStates.Inactive}."),
+                UpdateResult.IsInUse => Results.Conflict("Device is in use, cannot update name nor brand."),
+                _ => Results.Ok(update),
+            };
+        }
+
     }
 }
