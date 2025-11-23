@@ -20,8 +20,17 @@ namespace DeviceApi.Services
             return await dbContext.Devices.FindAsync(id);
         }
 
-        public async Task<Device> CreateAsync(Device device)
+        public async Task<Device?> CreateAsync(Device device)
         {
+            
+            if (device.State != "Available" 
+                && device.State != "InUse" 
+                && device.State != "Inactive")
+            {
+                return null;
+            }
+            
+
             dbContext.Devices.Add(device);
             await dbContext.SaveChangesAsync();
             return device; // TODO: check this

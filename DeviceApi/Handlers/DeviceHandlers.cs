@@ -55,8 +55,10 @@ namespace DeviceApi.Handlers
             };
 
             var created = await service.CreateAsync(device);
-            
-            return Results.Created($"/devices/{created.Id}", created);
+
+            return created is null
+                ? Results.BadRequest("State should be 'Available', 'InUse' or 'Inactive'") //TODO: add test
+                : Results.Created($"/devices/{created.Id}", created);
         }
     }
 }
