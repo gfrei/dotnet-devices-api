@@ -27,6 +27,14 @@ namespace DeviceApi.Services
             return device;
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            var deviceToDelete = new Device { Id = id };
+            dbContext.Devices.Attach(deviceToDelete);
+            dbContext.Devices.Remove(deviceToDelete);
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Device>> QueryAsync(string? name, string? brand, string? state)
         {
             IQueryable<Device> query = dbContext.Devices;
