@@ -70,6 +70,24 @@ namespace DeviceApi.Tests.Handlers
             Assert.Equal("/devices/1", httpResult.Location);
         }
 
+       [Fact]
+        public async Task QueryDevices_Ok()
+        {
+            // Arrange
+            var expected = new List<Device>{ };
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.QueryAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(expected);
+
+            // Act
+            var result = await DeviceHandlers.QueryDevices(mockService.Object, null, null, null);
+
+            // Assert
+            var okResult = Assert.IsType<Ok<IEnumerable<Device>>>(result);
+            Assert.Equal(expected, okResult.Value);
+        }
+
         //aux
         private DeviceCreateDTO GenerateTestDeviceCreateDTO()
         {
