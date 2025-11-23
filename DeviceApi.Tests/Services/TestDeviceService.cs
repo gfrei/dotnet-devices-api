@@ -65,5 +65,26 @@ namespace DeviceApi.Tests.Services
             Assert.NotNull(savedDevice);
             TestHelpers.AssertEqualDevices(savedDevice, device);
         }
+
+        [Fact]
+        public async Task DeleteAsync_DeleteOk()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var device = TestHelpers.GetTestDevice();
+            db.Devices.Add(device);
+            await db.SaveChangesAsync();
+            
+            var service = new DeviceService(db);
+
+            // Act
+            bool ok = await service.DeleteAsync(device.Id);
+            
+            // Assert
+            var deletedDevice = await db.FindAsync<Device>(device.Id);
+
+            Assert.True(ok);
+            Assert.Null(deletedDevice);
+        }
     }
 }
