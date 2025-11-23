@@ -1,3 +1,4 @@
+using DeviceApi.Data;
 using DeviceApi.Models;
 
 namespace DeviceApi.Services
@@ -6,7 +7,7 @@ namespace DeviceApi.Services
     {
         Task<Device?> GetByIdAsync(int id);
         Task<Device> CreateAsync(Device device);
-        Task<bool> DeleteAsync(int id);
+        Task<DeleteResult> DeleteAsync(int id);
         Task<IEnumerable<Device>> QueryAsync(string? name, string? brand, string? state);
     }
 }

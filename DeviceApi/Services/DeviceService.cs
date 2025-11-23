@@ -27,16 +27,20 @@ namespace DeviceApi.Services
             return device; // TODO: check this
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        
+        public async Task<DeleteResult> DeleteAsync(int id)
         {
             var device = await dbContext.Devices.FindAsync(id);
 
             if (device is null)
-                return false;
+                return DeleteResult.NotFound;
+
+            if (device.State == "in use") //TODO: refactor state
+                return DeleteResult.NowAllowed;
 
             dbContext.Devices.Remove(device);
             await dbContext.SaveChangesAsync();
-            return true;
+            return DeleteResult.Deleted;
         }
 
         public async Task<IEnumerable<Device>> QueryAsync(string? name, string? brand, string? state)

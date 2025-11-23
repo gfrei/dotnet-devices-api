@@ -32,8 +32,10 @@ namespace DeviceApi.Handlers
 
         public static async Task<IResult> DeleteDeviceById(IDeviceService service, int id)
         {
-            await service.DeleteAsync(id);
-            return Results.NoContent();
+            var result = await service.DeleteAsync(id);
+            return result is DeleteResult.Deleted
+                ? Results.NoContent()
+                : Results.Conflict("Device in use");
         }
         
         public static async Task<IResult> QueryDevices(IDeviceService service, string? name, string? brand, string? state)
