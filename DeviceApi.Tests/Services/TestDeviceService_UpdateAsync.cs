@@ -22,7 +22,7 @@ namespace DeviceApi.Tests.Services
             
             await db.SaveChangesAsync();
 
-            var update = TestHelpers.GetTestDevice(name: "new_name");
+            var update = TestHelpers.GetEmptyTestDevice(name: "new_name");
 
             // Act
             var result = await service.UpdateAsync(device.Id, update);
@@ -33,6 +33,11 @@ namespace DeviceApi.Tests.Services
 
             Assert.NotNull(updated);
             Assert.Equal(update.Name, updated.Name);
+
+            Assert.Equal(device.Brand, updated.Brand);
+            Assert.Equal(device.State, updated.State);
+            Assert.Equal(device.CreationTime, updated.CreationTime);
+            Assert.Equal(device.Id, updated.Id);
         }
 
         [Fact]
@@ -47,7 +52,7 @@ namespace DeviceApi.Tests.Services
             
             await db.SaveChangesAsync();
 
-            var update = TestHelpers.GetTestDevice(brand: "new_brand");
+            var update = TestHelpers.GetEmptyTestDevice(brand: "new_brand");
 
             // Act
             var result = await service.UpdateAsync(device.Id, update);
@@ -58,6 +63,11 @@ namespace DeviceApi.Tests.Services
 
             Assert.NotNull(updated);
             Assert.Equal(update.Brand, updated.Brand);
+
+            Assert.Equal(device.Name, updated.Name);
+            Assert.Equal(device.State, updated.State);
+            Assert.Equal(device.CreationTime, updated.CreationTime);
+            Assert.Equal(device.Id, updated.Id);
         }
 
         [Fact]
@@ -72,7 +82,7 @@ namespace DeviceApi.Tests.Services
             
             await db.SaveChangesAsync();
 
-            var update = TestHelpers.GetTestDevice(state: DeviceStates.Inactive);
+            var update = TestHelpers.GetEmptyTestDevice(state: DeviceStates.Inactive);
 
             // Act
             var result = await service.UpdateAsync(device.Id, update);
@@ -83,6 +93,11 @@ namespace DeviceApi.Tests.Services
 
             Assert.NotNull(updated);
             Assert.Equal(update.State, updated.State);
+
+            Assert.Equal(device.Name, updated.Name);
+            Assert.Equal(device.Brand, updated.Brand);
+            Assert.Equal(device.CreationTime, updated.CreationTime);
+            Assert.Equal(device.Id, updated.Id);
         }
 
         [Fact]
@@ -97,7 +112,7 @@ namespace DeviceApi.Tests.Services
             
             await db.SaveChangesAsync();
 
-            var update = TestHelpers.GetTestDevice(state: "new_state");
+            var update = TestHelpers.GetEmptyTestDevice(state: "new_state");
 
             // Act
             var result = await service.UpdateAsync(device.Id, update);
@@ -108,6 +123,11 @@ namespace DeviceApi.Tests.Services
 
             Assert.NotNull(updated);
             Assert.NotEqual(update.State, updated.State);
+
+            Assert.Equal(device.Name, updated.Name);
+            Assert.Equal(device.Brand, updated.Brand);
+            Assert.Equal(device.CreationTime, updated.CreationTime);
+            Assert.Equal(device.Id, updated.Id);
         }
 
         [Fact]
@@ -122,7 +142,7 @@ namespace DeviceApi.Tests.Services
             
             await db.SaveChangesAsync();
 
-            var update = TestHelpers.GetTestDevice(name: "new_name");
+            var update = TestHelpers.GetEmptyTestDevice(name: "new_name");
 
             // Act
             var result = await service.UpdateAsync(device.Id + 1, update);
@@ -143,7 +163,7 @@ namespace DeviceApi.Tests.Services
             
             await db.SaveChangesAsync();
 
-            var update = TestHelpers.GetTestDevice(name: "new_name");
+            var update = TestHelpers.GetEmptyTestDevice(name: "new_name");
 
             // Act
             var result = await service.UpdateAsync(device.Id, update);
@@ -154,6 +174,12 @@ namespace DeviceApi.Tests.Services
             var updated = await db.Devices.FindAsync(device.Id);
             Assert.NotNull(updated);
             Assert.NotEqual(update.Name, updated.Name);
+
+            Assert.Equal(device.Name, updated.Name);
+            Assert.Equal(device.Brand, updated.Brand);
+            Assert.Equal(device.State, updated.State);
+            Assert.Equal(device.CreationTime, updated.CreationTime);
+            Assert.Equal(device.Id, updated.Id);
         }
     }
 }
