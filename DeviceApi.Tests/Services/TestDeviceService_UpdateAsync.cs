@@ -34,5 +34,126 @@ namespace DeviceApi.Tests.Services
             Assert.NotNull(updated);
             Assert.Equal(update.Name, updated.Name);
         }
+
+        [Fact]
+        public async Task UpdateAsync_UpdateBrand_Ok()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device = TestHelpers.GetTestDevice();
+            db.Devices.Add(device);
+            
+            await db.SaveChangesAsync();
+
+            var update = TestHelpers.GetTestDevice(brand: "new_brand");
+
+            // Act
+            var result = await service.UpdateAsync(device.Id, update);
+            
+            // Assert
+            var updated = await db.Devices.FindAsync(device.Id);
+            Assert.Equal(UpdateResult.Updated, result);
+
+            Assert.NotNull(updated);
+            Assert.Equal(update.Brand, updated.Brand);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_UpdateState_Ok()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device = TestHelpers.GetTestDevice();
+            db.Devices.Add(device);
+            
+            await db.SaveChangesAsync();
+
+            var update = TestHelpers.GetTestDevice(state: DeviceStates.Inactive);
+
+            // Act
+            var result = await service.UpdateAsync(device.Id, update);
+            
+            // Assert
+            var updated = await db.Devices.FindAsync(device.Id);
+            Assert.Equal(UpdateResult.Updated, result);
+
+            Assert.NotNull(updated);
+            Assert.Equal(update.State, updated.State);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_UpdateState_InvalidState()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device = TestHelpers.GetTestDevice();
+            db.Devices.Add(device);
+            
+            await db.SaveChangesAsync();
+
+            var update = TestHelpers.GetTestDevice(state: "new_state");
+
+            // Act
+            var result = await service.UpdateAsync(device.Id, update);
+            
+            // Assert
+            var updated = await db.Devices.FindAsync(device.Id);
+            Assert.Equal(UpdateResult.InvalidState, result);
+
+            Assert.NotNull(updated);
+            Assert.NotEqual(update.State, updated.State);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_DeviceNotFound()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device = TestHelpers.GetTestDevice();
+            db.Devices.Add(device);
+            
+            await db.SaveChangesAsync();
+
+            var update = TestHelpers.GetTestDevice(name: "new_name");
+
+            // Act
+            var result = await service.UpdateAsync(device.Id + 1, update);
+            
+            // Assert
+            Assert.Equal(UpdateResult.NotFound, result);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_DeviceInUse()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device = TestHelpers.GetTestDevice(state: DeviceStates.InUse);
+            db.Devices.Add(device);
+            
+            await db.SaveChangesAsync();
+
+            var update = TestHelpers.GetTestDevice(name: "new_name");
+
+            // Act
+            var result = await service.UpdateAsync(device.Id, update);
+            
+            // Assert
+            Assert.Equal(UpdateResult.IsInUse, result);
+
+            var updated = await db.Devices.FindAsync(device.Id);
+            Assert.NotNull(updated);
+            Assert.NotEqual(update.Name, updated.Name);
+        }
     }
 }
