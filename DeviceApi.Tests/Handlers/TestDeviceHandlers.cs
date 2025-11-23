@@ -104,6 +104,22 @@ namespace DeviceApi.Tests.Handlers
             var okResult = Assert.IsType<NoContent>(result);
         }
 
+       [Fact]
+        public async Task DeleteDeviceById_Conflict()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.DeleteAsync(It.IsAny<int>()))
+                .ReturnsAsync(DeleteResult.NowAllowed);
+
+            // Act
+            var result = await DeviceHandlers.DeleteDeviceById(mockService.Object, 1);
+
+            // Assert
+            var okResult = Assert.IsType<Conflict<string>>(result);
+        }
+
         //aux
         private DeviceCreateDTO GenerateTestDeviceCreateDTO()
         {
