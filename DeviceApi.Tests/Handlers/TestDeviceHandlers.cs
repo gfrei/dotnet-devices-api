@@ -94,7 +94,8 @@ namespace DeviceApi.Tests.Handlers
             // Arrange
             var mockService = new Mock<IDeviceService>();
             mockService
-                .Setup(s => s.DeleteAsync(It.IsAny<int>()));
+                .Setup(s => s.DeleteAsync(It.IsAny<int>()))
+                .ReturnsAsync(DeleteResult.Deleted);
 
             // Act
             var result = await DeviceHandlers.DeleteDeviceById(mockService.Object, 1);

@@ -67,7 +67,7 @@ namespace DeviceApi.Tests.Services
         }
 
         [Fact]
-        public async Task DeleteAsync_DeleteOk()
+        public async Task DeleteAsync_Deleted()
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
@@ -78,29 +78,29 @@ namespace DeviceApi.Tests.Services
             var service = new DeviceService(db);
 
             // Act
-            bool ok = await service.DeleteAsync(device.Id);
+            DeleteResult result = await service.DeleteAsync(device.Id);
             
             // Assert
             var deletedDevice = await db.FindAsync<Device>(device.Id);
 
-            Assert.True(ok);
+            Assert.Equal(DeleteResult.Deleted, result);
             Assert.Null(deletedDevice);
         }
 
         [Fact]
-        public async Task DeleteAsync_ElementDoesNotExist_Ok()
+        public async Task DeleteAsync_ElementNotFound_Ok()
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
             var service = new DeviceService(db);
 
             // Act
-            bool ok = await service.DeleteAsync(1);
+            DeleteResult result = await service.DeleteAsync(1);
             
             // Assert
             var deletedDevice = await db.FindAsync<Device>(1);
 
-            Assert.False(ok);
+            Assert.Equal(DeleteResult.NotFound, result);
             Assert.Null(deletedDevice);
         }
     }
