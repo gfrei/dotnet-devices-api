@@ -22,20 +22,43 @@ namespace DeviceApi.Services
 
         public async Task<Device?> CreateAsync(Device device)
         {
-            
-            if (device.State != DeviceStates.Available 
-                && device.State != DeviceStates.Inactive
-                && device.State != DeviceStates.InUse)
+            if (device.State != null && IsStateValid(device.State))
             {
                 return null;
             }
-            
 
             var saved = dbContext.Devices.Add(device);
             await dbContext.SaveChangesAsync();
-            return saved.Entity;
+            return device; //TODO: fix this saved?
         }
 
+        public async Task<UpdateResult> UpdateAsync(int id, Device update)
+        {
+            var saved = await dbContext.Devices.FindAsync(id);
+            if (saved == null)
+            {
+                return UpdateResult.NotFound;
+            }
+
+            if (update.State != null && IsStateValid(update.State))
+            {
+                return UpdateResult.InvalidState;
+            }
+
+            if (saved.State == DeviceStates.InUse &&
+                (update.Brand != null || update.Name != null))
+            {
+                return UpdateResult.IsInUse;
+            }
+
+            saved.Name = update.Name ?? saved.Name;
+            saved.Brand = update.Brand ?? saved.Brand;
+            saved.State = update.State ?? saved.State;
+            
+            await dbContext.SaveChangesAsync();
+
+            return UpdateResult.Updated;
+        }
         
         public async Task<DeleteResult> DeleteAsync(int id)
         {
@@ -72,6 +95,14 @@ namespace DeviceApi.Services
             }
 
             return await query.ToListAsync();
+        }
+
+        // Aux
+        private bool IsStateValid(string state)
+        {
+            return state != DeviceStates.Available 
+                && state != DeviceStates.Inactive
+                && state != DeviceStates.InUse;
         }
     }
 }
