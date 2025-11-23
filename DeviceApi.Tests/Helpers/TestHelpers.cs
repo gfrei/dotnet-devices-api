@@ -15,7 +15,7 @@ namespace DeviceApi.Tests.Helpers
             return new AppDbContext(options);
         }
 
-        public static Device GetTestDevice(int id = 1, string name = "name", string brand = "brand", string state = "state")
+        public static Device GetTestDevice(int id = 1, string name = "name", string brand = "brand", string state = DeviceStates.Available)
         {
             return new Device {
                 Id = id,
