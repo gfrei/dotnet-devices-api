@@ -26,6 +26,18 @@ namespace DeviceApi.Tests.Helpers
             };
         }
 
+
+        public static Device GetEmptyTestDevice(int id = 1, string? name = null, string? brand = null, string? state = null)
+        {
+            return new Device {
+                Id = id,
+                Name = name,
+                Brand = brand,
+                State = state,
+                CreationTime = DateTime.UtcNow
+            };
+        }
+
         public static void AssertEqualDevices(Device deviceA, Device deviceB)
         {
             Assert.Equal(deviceA.Id, deviceB.Id);
