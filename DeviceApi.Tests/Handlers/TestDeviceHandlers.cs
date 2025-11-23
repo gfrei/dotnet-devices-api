@@ -88,6 +88,21 @@ namespace DeviceApi.Tests.Handlers
             Assert.Equal(expected, okResult.Value);
         }
 
+       [Fact]
+        public async Task DeleteDeviceById_NoContent()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.DeleteAsync(It.IsAny<int>()));
+
+            // Act
+            var result = await DeviceHandlers.DeleteDeviceById(mockService.Object, 1);
+
+            // Assert
+            var okResult = Assert.IsType<NoContent>(result);
+        }
+
         //aux
         private DeviceCreateDTO GenerateTestDeviceCreateDTO()
         {
