@@ -49,7 +49,61 @@ namespace DeviceApi.Tests.Services
         }
 
         [Fact]
-        public async Task CreateAsync_AddNewDevice()
+        public async Task CreateAsync_AddNewDevice_Available()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var device = TestHelpers.GetTestDevice(state: "Available");
+            var service = new DeviceService(db);
+
+            // Act
+            await service.CreateAsync(device);
+            
+            // Assert
+            var savedDevice = await db.FindAsync<Device>(device.Id);
+
+            Assert.NotNull(savedDevice);
+            TestHelpers.AssertEqualDevices(savedDevice, device);
+        }
+
+        [Fact]
+        public async Task CreateAsync_AddNewDevice_InUse()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var device = TestHelpers.GetTestDevice(state: "InUse");
+            var service = new DeviceService(db);
+
+            // Act
+            await service.CreateAsync(device);
+            
+            // Assert
+            var savedDevice = await db.FindAsync<Device>(device.Id);
+
+            Assert.NotNull(savedDevice);
+            TestHelpers.AssertEqualDevices(savedDevice, device);
+        }
+
+        [Fact]
+        public async Task CreateAsync_AddNewDevice_Inactive()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var device = TestHelpers.GetTestDevice(state: "Inactive");
+            var service = new DeviceService(db);
+
+            // Act
+            await service.CreateAsync(device);
+            
+            // Assert
+            var savedDevice = await db.FindAsync<Device>(device.Id);
+
+            Assert.NotNull(savedDevice);
+            TestHelpers.AssertEqualDevices(savedDevice, device);
+        }
+
+        [Fact]
+        public async Task CreateAsync_AddNewDevice_StateInvalid()
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
@@ -62,8 +116,7 @@ namespace DeviceApi.Tests.Services
             // Assert
             var savedDevice = await db.FindAsync<Device>(device.Id);
 
-            Assert.NotNull(savedDevice);
-            TestHelpers.AssertEqualDevices(savedDevice, device);
+            Assert.Null(savedDevice);
         }
 
         [Fact]
