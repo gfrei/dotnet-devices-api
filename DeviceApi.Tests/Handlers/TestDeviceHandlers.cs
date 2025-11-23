@@ -139,6 +139,78 @@ namespace DeviceApi.Tests.Handlers
             var okResult = Assert.IsType<Conflict<string>>(result);
         }
 
+       [Fact]
+        public async Task UpdateDevice_Ok()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
+                .ReturnsAsync(UpdateResult.Updated);
+
+            var dto = new DeviceUpdateDTO { Name = "new_name" };
+
+            // Act
+            var result = await DeviceHandlers.UpdateDevice(mockService.Object, 1, dto);
+
+            // Assert
+            var okResult = Assert.IsType<Ok<Device>>(result);
+        }
+
+       [Fact]
+        public async Task UpdateDevice_NotFound()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
+                .ReturnsAsync(UpdateResult.NotFound);
+
+            var dto = new DeviceUpdateDTO { Name = "new_name" };
+
+            // Act
+            var result = await DeviceHandlers.UpdateDevice(mockService.Object, 1, dto);
+
+            // Assert
+            var okResult = Assert.IsType<NotFound>(result);
+        }
+
+       [Fact]
+        public async Task UpdateDevice_BadRequest()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
+                .ReturnsAsync(UpdateResult.InvalidState);
+
+            var dto = new DeviceUpdateDTO { State = "new_state" };
+
+            // Act
+            var result = await DeviceHandlers.UpdateDevice(mockService.Object, 1, dto);
+
+            // Assert
+            var okResult = Assert.IsType<BadRequest<string>>(result);
+        }
+
+       [Fact]
+        public async Task UpdateDevice_Conflict()
+        {
+            // Arrange
+            var mockService = new Mock<IDeviceService>();
+            mockService
+                .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
+                .ReturnsAsync(UpdateResult.IsInUse);
+
+            var dto = new DeviceUpdateDTO { Name = "new_name" };
+
+            // Act
+            var result = await DeviceHandlers.UpdateDevice(mockService.Object, 1, dto);
+
+            // Assert
+            var okResult = Assert.IsType<Conflict<string>>(result);
+        }
+
         //aux
         private DeviceCreateDTO GenerateTestDeviceCreateDTO()
         {
