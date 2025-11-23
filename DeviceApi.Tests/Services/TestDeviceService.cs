@@ -103,5 +103,26 @@ namespace DeviceApi.Tests.Services
             Assert.Equal(DeleteResult.NotFound, result);
             Assert.Null(deletedDevice);
         }
+
+        [Fact]
+        public async Task DeleteAsync_NowAllowed()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var device = TestHelpers.GetTestDevice(state: "in use"); //TODO: refactor state
+            db.Devices.Add(device);
+            await db.SaveChangesAsync();
+            
+            var service = new DeviceService(db);
+
+            // Act
+            DeleteResult result = await service.DeleteAsync(device.Id);
+            
+            // Assert
+            var notDeletedDevice = await db.FindAsync<Device>(device.Id);
+
+            Assert.Equal(DeleteResult.NowAllowed, result);
+            Assert.NotNull(notDeletedDevice);
+        }
     }
 }
