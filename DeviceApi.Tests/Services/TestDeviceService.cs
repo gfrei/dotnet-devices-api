@@ -14,7 +14,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = GetTestDevice();
+            var device = TestHelpers.GetTestDevice();
 
             db.Devices.Add(device);
             await db.SaveChangesAsync();
@@ -26,7 +26,7 @@ namespace DeviceApi.Tests.Services
 
             // Assert
             Assert.NotNull(result);
-            AssertEqualDevices(device, result);
+            TestHelpers.AssertEqualDevices(device, result);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = GetTestDevice();
+            var device = TestHelpers.GetTestDevice();
 
             db.Devices.Add(device);
             await db.SaveChangesAsync();
@@ -53,7 +53,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = GetTestDevice();
+            var device = TestHelpers.GetTestDevice();
             var service = new DeviceService(db);
 
             // Act
@@ -63,7 +63,7 @@ namespace DeviceApi.Tests.Services
             var savedDevice = await db.FindAsync<Device>(device.Id);
 
             Assert.NotNull(savedDevice);
-            AssertEqualDevices(savedDevice, device);
+            TestHelpers.AssertEqualDevices(savedDevice, device);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace DeviceApi.Tests.Services
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
             var service = new DeviceService(db);
-            var device = GetTestDevice();
+            var device = TestHelpers.GetTestDevice();
 
             db.Devices.Add(device);
             await db.SaveChangesAsync();
@@ -100,7 +100,7 @@ namespace DeviceApi.Tests.Services
             Assert.Single(devices);
             
             var returned = devices.First();
-            AssertEqualDevices(device, returned);
+            TestHelpers.AssertEqualDevices(device, returned);
         }
         
         [Fact]
@@ -110,9 +110,9 @@ namespace DeviceApi.Tests.Services
             var db = TestHelpers.CreateInMemoryDb();
             var service = new DeviceService(db);
 
-            var device1 = GetTestDevice(1);
-            var device2 = GetTestDevice(2);
-            var device3 = GetTestDevice(3);
+            var device1 = TestHelpers.GetTestDevice(1);
+            var device2 = TestHelpers.GetTestDevice(2);
+            var device3 = TestHelpers.GetTestDevice(3);
 
             db.Devices.Add(device1);
             db.Devices.Add(device2);
@@ -126,27 +126,6 @@ namespace DeviceApi.Tests.Services
             // Assert
             Assert.NotNull(devices);
             Assert.Equal(3, devices.Count());
-        }
-
-        // Aux
-        private Device GetTestDevice(int id = 1)
-        {
-            return new Device {
-                Id = id,
-                Name = "name",
-                Brand = "brand",
-                State = "state",
-                CreationTime = DateTime.UtcNow
-            };
-        }
-
-        private void AssertEqualDevices(Device deviceA, Device deviceB)
-        {
-            Assert.Equal(deviceA.Id, deviceB.Id);
-            Assert.Equal(deviceA.Name, deviceB.Name);
-            Assert.Equal(deviceA.Brand, deviceB.Brand);
-            Assert.Equal(deviceA.State, deviceB.State);
-            Assert.Equal(deviceA.CreationTime, deviceB.CreationTime);
         }
     }
 }

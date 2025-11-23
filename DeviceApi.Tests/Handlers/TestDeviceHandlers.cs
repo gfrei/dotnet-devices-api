@@ -17,7 +17,7 @@ namespace DeviceApi.Tests.Handlers
         {
             // Arrange
             var mockService = new Mock<IDeviceService>();
-            var device = GenerateDeviceResult();
+            var device = TestHelpers.GetTestDevice();
             
             mockService
                 .Setup(s => s.GetByIdAsync(It.IsAny<int>()))
@@ -55,7 +55,7 @@ namespace DeviceApi.Tests.Handlers
             var mockService = new Mock<IDeviceService>();
 
             var dto = GenerateTestDeviceCreateDTO();
-            var createdDevice = GenerateDeviceResult();
+            var createdDevice = TestHelpers.GetTestDevice();
 
             mockService
                 .Setup(s => s.CreateAsync(It.IsAny<Device>()))
@@ -71,18 +71,6 @@ namespace DeviceApi.Tests.Handlers
         }
 
         //aux
-        private Device GenerateDeviceResult()
-        {
-            return new Device 
-            { 
-                Id = 1,
-                Name = "device_name",
-                Brand = "device_brand",
-                State = "device_state",
-                CreationTime = DateTime.UtcNow
-            };
-        }
-
         private DeviceCreateDTO GenerateTestDeviceCreateDTO()
         {
             return new DeviceCreateDTO

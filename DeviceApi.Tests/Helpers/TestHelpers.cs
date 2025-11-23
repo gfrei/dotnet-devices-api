@@ -1,4 +1,5 @@
 using DeviceApi.Data;
+using DeviceApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeviceApi.Tests.Helpers
@@ -12,6 +13,26 @@ namespace DeviceApi.Tests.Helpers
                 .Options;
 
             return new AppDbContext(options);
+        }
+
+        public static Device GetTestDevice(int id = 1, string name = "name", string brand = "brand", string state = "state")
+        {
+            return new Device {
+                Id = id,
+                Name = name,
+                Brand = brand,
+                State = state,
+                CreationTime = DateTime.UtcNow
+            };
+        }
+
+        public static void AssertEqualDevices(Device deviceA, Device deviceB)
+        {
+            Assert.Equal(deviceA.Id, deviceB.Id);
+            Assert.Equal(deviceA.Name, deviceB.Name);
+            Assert.Equal(deviceA.Brand, deviceB.Brand);
+            Assert.Equal(deviceA.State, deviceB.State);
+            Assert.Equal(deviceA.CreationTime, deviceB.CreationTime);
         }
     }
 }
