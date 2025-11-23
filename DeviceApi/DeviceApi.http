@@ -46,6 +46,10 @@ GET http://localhost:8080/devices/1
 
 ###
 
+DELETE http://localhost:8080/devices/1
+
+###
+
 GET http://localhost:8080/devices/
 
 ###
