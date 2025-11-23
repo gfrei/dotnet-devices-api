@@ -27,11 +27,6 @@ namespace DeviceApi.Services
             return device;
         }
 
-        public async Task<IEnumerable<Device>> GetAllAsync()
-        {
-            return await dbContext.Devices.ToListAsync();
-        }
-
         public async Task<IEnumerable<Device>> QueryAsync(string? name, string? brand, string? state)
         {
             IQueryable<Device> query = dbContext.Devices;

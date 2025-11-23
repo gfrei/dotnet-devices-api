@@ -9,6 +9,67 @@ namespace DeviceApi.Tests.Services
 {
     public class TestDeviceService_QueryAsync
     {
+        [Fact]
+        public async Task QueryAsync_NoData()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            // Act
+            var devices = await service.QueryAsync(null, null, null);
+            
+            // Assert
+            Assert.NotNull(devices);
+            Assert.Empty(devices);
+        }
+        
+        [Fact]
+        public async Task QueryAsync_SingleEntry()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+            var device = TestHelpers.GetTestDevice();
+
+            db.Devices.Add(device);
+            await db.SaveChangesAsync();
+
+            // Act
+            var devices = await service.QueryAsync(null, null, null);
+            
+            // Assert
+            Assert.NotNull(devices);
+            Assert.Single(devices);
+            
+            var returned = devices.First();
+            TestHelpers.AssertEqualDevices(device, returned);
+        }
+        
+        [Fact]
+        public async Task QueryAsync_ManyEntries()
+        {
+            // Arrange
+            var db = TestHelpers.CreateInMemoryDb();
+            var service = new DeviceService(db);
+
+            var device1 = TestHelpers.GetTestDevice(1);
+            var device2 = TestHelpers.GetTestDevice(2);
+            var device3 = TestHelpers.GetTestDevice(3);
+
+            db.Devices.Add(device1);
+            db.Devices.Add(device2);
+            db.Devices.Add(device3);
+
+            await db.SaveChangesAsync();
+
+            // Act
+            var devices = await service.QueryAsync(null, null, null);
+            
+            // Assert
+            Assert.NotNull(devices);
+            Assert.Equal(3, devices.Count());
+        }
         
         [Fact]
         public async Task QueryAsync_TestBrandFilter()
