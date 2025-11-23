@@ -107,7 +107,7 @@ namespace DeviceApi.Tests.Services
         {
             // Arrange
             var db = TestHelpers.CreateInMemoryDb();
-            var device = TestHelpers.GetTestDevice();
+            var device = TestHelpers.GetTestDevice(state: "invalid");
             var service = new DeviceService(db);
 
             // Act
