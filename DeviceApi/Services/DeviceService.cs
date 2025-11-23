@@ -31,5 +31,27 @@ namespace DeviceApi.Services
         {
             return await dbContext.Devices.ToListAsync();
         }
+
+        public async Task<IEnumerable<Device>> QueryAsync(string? name, string? brand, string? state)
+        {
+            IQueryable<Device> query = dbContext.Devices;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(p => p.Name == name);
+            }
+
+            if (!string.IsNullOrEmpty(brand))
+            {
+                query = query.Where(p => p.Brand == brand);
+            }
+
+            if (!string.IsNullOrEmpty(state))
+            {
+                query = query.Where(p => p.State == state);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }
