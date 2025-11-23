@@ -31,9 +31,9 @@ namespace DeviceApi.Services
             }
             
 
-            dbContext.Devices.Add(device);
+            var saved = dbContext.Devices.Add(device);
             await dbContext.SaveChangesAsync();
-            return device; // TODO: check this
+            return saved.Entity;
         }
 
         
