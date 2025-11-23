@@ -14,6 +14,7 @@ namespace DeviceApi.Handlers
             group.MapGet("/{id:int}", GetDeviceById);
             group.MapGet("/", QueryDevices);
             group.MapPost("/", CreateDevice);
+            group.MapDelete("/{id:int}", DeleteDeviceById);
 
             return group;
         }
@@ -25,6 +26,12 @@ namespace DeviceApi.Handlers
             return device is not null 
                 ? Results.Ok(device)
                 : Results.NotFound();
+        }
+
+        public static async Task<IResult> DeleteDeviceById(IDeviceService service, int id)
+        {
+            await service.DeleteAsync(id);
+            return Results.NoContent();
         }
         
         public static async Task<IResult> QueryDevices(IDeviceService service, string? name, string? brand, string? state)
