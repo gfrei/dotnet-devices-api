@@ -10,6 +10,14 @@ A RESTful Minimal API built with **.NET 9**. This project uses **PostgreSQL** fo
 * **Containerization:** [Docker](https://www.docker.com/) & Docker Compose
 * **Documentation:** Swagger UI (Swashbuckle)
 
+## Code Structure
+- The main project is located on DeviceApi/
+- The test project is located on DeviceApi.Tests
+- The main project entry point is DeviceApi/Program.cs
+- The endpoints are configured at DeviceApi/Handlers/DeviceHandlers.cs
+- Docker files are located on DeviceApi/
+
+
 ## Prerequisites
 
 Before running the project, ensure you have the following installed:
@@ -22,8 +30,9 @@ Before running the project, ensure you have the following installed:
 
 
 1.  **Start the services:**
+   On the DeviceApi folder
     ```bash
-    docker-compose up -d --build
+    /DeviceApi/docker-compose up -d --build
     ```
 
 2.  **Access the API:**
@@ -163,7 +172,7 @@ Update device
 
 ##### Description:
 
-Updates fields name, brand and state of an existing device.
+Updates fields name, brand and state of an existing device. Can receive name, brand and state.
 
 Examples:
 
@@ -179,6 +188,15 @@ Content-Type: application/json
 
 {
     "name": "S22"
+}
+
+PUT http://localhost:8080/devices/10
+Content-Type: application/json
+
+{
+    "name": "galaxy s20",
+    "brand": "Samsung",
+    "state": "available"
 }
 
 
@@ -218,6 +236,13 @@ Deletes a device unless it is in use.
 | ---- | ----------- |
 | 204 | No Content |
 | 409 | Conflict |
+
+## To run Tests
+
+On the root of the project, execute:
+    ```bash
+    /dotnet test
+    ```
 
 ## Future improvements
 - On Device Model, we can have a Deleted boolean to enable not losing data on deletion.
