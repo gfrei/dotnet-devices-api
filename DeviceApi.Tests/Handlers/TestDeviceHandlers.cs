@@ -146,7 +146,7 @@ namespace DeviceApi.Tests.Handlers
             var mockService = new Mock<IDeviceService>();
             mockService
                 .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
-                .ReturnsAsync(UpdateResult.Updated);
+                .ReturnsAsync((UpdateResult.Updated, new Device()));
 
             var dto = new DeviceUpdateDTO { Name = "new_name" };
 
@@ -164,7 +164,7 @@ namespace DeviceApi.Tests.Handlers
             var mockService = new Mock<IDeviceService>();
             mockService
                 .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
-                .ReturnsAsync(UpdateResult.NotFound);
+                .ReturnsAsync((UpdateResult.NotFound, new Device()));
 
             var dto = new DeviceUpdateDTO { Name = "new_name" };
 
@@ -182,7 +182,7 @@ namespace DeviceApi.Tests.Handlers
             var mockService = new Mock<IDeviceService>();
             mockService
                 .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
-                .ReturnsAsync(UpdateResult.InvalidState);
+                .ReturnsAsync((UpdateResult.InvalidState, new Device()));
 
             var dto = new DeviceUpdateDTO { State = "new_state" };
 
@@ -200,7 +200,7 @@ namespace DeviceApi.Tests.Handlers
             var mockService = new Mock<IDeviceService>();
             mockService
                 .Setup(s => s.UpdateAsync(It.IsAny<int>(), It.IsAny<Device>()))
-                .ReturnsAsync(UpdateResult.IsInUse);
+                .ReturnsAsync((UpdateResult.IsInUse, new Device()));
 
             var dto = new DeviceUpdateDTO { Name = "new_name" };
 

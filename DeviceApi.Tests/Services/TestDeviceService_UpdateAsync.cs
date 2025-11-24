@@ -25,10 +25,9 @@ namespace DeviceApi.Tests.Services
             var update = TestHelpers.GetEmptyTestDevice(name: "new_name");
 
             // Act
-            var result = await service.UpdateAsync(device.Id, update);
+            (var result, var updated) = await service.UpdateAsync(device.Id, update);
             
             // Assert
-            var updated = await db.Devices.FindAsync(device.Id);
             Assert.Equal(UpdateResult.Updated, result);
 
             Assert.NotNull(updated);
@@ -55,10 +54,9 @@ namespace DeviceApi.Tests.Services
             var update = TestHelpers.GetEmptyTestDevice(brand: "new_brand");
 
             // Act
-            var result = await service.UpdateAsync(device.Id, update);
+            (var result, var updated) = await service.UpdateAsync(device.Id, update);
             
             // Assert
-            var updated = await db.Devices.FindAsync(device.Id);
             Assert.Equal(UpdateResult.Updated, result);
 
             Assert.NotNull(updated);
@@ -85,10 +83,9 @@ namespace DeviceApi.Tests.Services
             var update = TestHelpers.GetEmptyTestDevice(state: DeviceStates.Inactive);
 
             // Act
-            var result = await service.UpdateAsync(device.Id, update);
+            (var result, var updated) = await service.UpdateAsync(device.Id, update);
             
             // Assert
-            var updated = await db.Devices.FindAsync(device.Id);
             Assert.Equal(UpdateResult.Updated, result);
 
             Assert.NotNull(updated);
@@ -115,10 +112,9 @@ namespace DeviceApi.Tests.Services
             var update = TestHelpers.GetEmptyTestDevice(state: "new_state");
 
             // Act
-            var result = await service.UpdateAsync(device.Id, update);
+            (var result, var updated) = await service.UpdateAsync(device.Id, update);
             
             // Assert
-            var updated = await db.Devices.FindAsync(device.Id);
             Assert.Equal(UpdateResult.InvalidState, result);
 
             Assert.NotNull(updated);
@@ -145,7 +141,7 @@ namespace DeviceApi.Tests.Services
             var update = TestHelpers.GetEmptyTestDevice(name: "new_name");
 
             // Act
-            var result = await service.UpdateAsync(device.Id + 1, update);
+            (var result, var updated) = await service.UpdateAsync(device.Id + 1, update);
             
             // Assert
             Assert.Equal(UpdateResult.NotFound, result);
@@ -166,12 +162,11 @@ namespace DeviceApi.Tests.Services
             var update = TestHelpers.GetEmptyTestDevice(name: "new_name");
 
             // Act
-            var result = await service.UpdateAsync(device.Id, update);
+            (var result, var updated) = await service.UpdateAsync(device.Id, update);
             
             // Assert
             Assert.Equal(UpdateResult.IsInUse, result);
 
-            var updated = await db.Devices.FindAsync(device.Id);
             Assert.NotNull(updated);
             Assert.NotEqual(update.Name, updated.Name);
 
