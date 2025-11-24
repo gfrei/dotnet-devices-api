@@ -13,7 +13,19 @@ namespace DeviceApi.Handlers
 
             group.MapGet("/", QueryDevices)
                 .WithSummary("Query devices")
-                .WithDescription("Returns a list of devices filtered by name, brand, or state.\nOptional filters: ?name=string, ?brand=string, ?state=string.")
+                .WithDescription("""
+Returns a list of devices filtered by name, brand, or state.
+Query parameters:
+- **name**: string — Filter by device name
+- **brand**: string — Filter by brand
+- **state**: string — Filter by state (available, in-use, inactive)
+Examples:
+
+GET http://localhost:8080/devices?brand=Moto
+GET http://localhost:8080/devices?brand=Moto&name=Edge
+GET http://localhost:8080/devices?name=Edge&state=available
+
+""")
                 .Produces<IEnumerable<Device>>(StatusCodes.Status200OK);
 
             group.MapGet("/{id:int}", GetDeviceById)
@@ -25,6 +37,20 @@ namespace DeviceApi.Handlers
             group.MapPost("/", CreateDevice)
                 .WithSummary("Create device")
                 .WithDescription("Creates a new device and returns it.")
+                .WithDescription("""
+Creates a new device and returns it.
+
+Examples:
+
+POST http://localhost:8080/devices
+Content-Type: application/json
+
+{
+    "name": "Edge",
+    "brand": "Moto",
+    "state": "available"
+}
+""")
                 .Accepts<DeviceCreateDTO>("application/json")
                 .Produces<Device>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status400BadRequest);
@@ -32,6 +58,26 @@ namespace DeviceApi.Handlers
             group.MapPut("/{id:int}", UpdateDevice)
                 .WithSummary("Update device")
                 .WithDescription("Updates fields name, brand and state of an existing device.")
+                .WithDescription("""
+Updates fields name, brand and state of an existing device.
+
+Examples:
+
+PUT http://localhost:8080/devices/5
+Content-Type: application/json
+
+{
+    "brand": "Samsung"
+}
+
+PUT http://localhost:8080/devices/1
+Content-Type: application/json
+
+{
+    "name": "S22"
+}
+
+""")
                 .Accepts<DeviceUpdateDTO>("application/json")
                 .Produces<Device>(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status400BadRequest)
