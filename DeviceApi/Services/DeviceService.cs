@@ -22,7 +22,7 @@ namespace DeviceApi.Services
 
         public async Task<Device?> CreateAsync(Device device)
         {
-            if (device.State != null && IsStateValid(device.State))
+            if (device.State != null && !IsStateValid(device.State))
             {
                 return null;
             }
@@ -40,7 +40,7 @@ namespace DeviceApi.Services
                 return (UpdateResult.NotFound, null);
             }
 
-            if (update.State != null && IsStateValid(update.State))
+            if (update.State != null && !IsStateValid(update.State))
             {
                 return (UpdateResult.InvalidState, saved);
             }
@@ -100,9 +100,9 @@ namespace DeviceApi.Services
         // Aux
         private bool IsStateValid(string state)
         {
-            return state != DeviceStates.Available 
-                && state != DeviceStates.Inactive
-                && state != DeviceStates.InUse;
+            return state == DeviceStates.Available 
+                || state == DeviceStates.Inactive
+                || state == DeviceStates.InUse;
         }
     }
 }
