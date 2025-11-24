@@ -9,18 +9,48 @@ namespace DeviceApi.Handlers
     {
         public static RouteGroupBuilder MapDeviceEndpoints(this IEndpointRouteBuilder routes)
         {
-            var group = routes.MapGroup("/devices");
+            var group = routes.MapGroup("/devices").WithTags("Devices");
 
-            group.MapGet("/", QueryDevices);
-            group.MapGet("/{id:int}", GetDeviceById);
+            group.MapGet("/", QueryDevices)
+                .WithSummary("Query devices")
+                .WithDescription("Returns a list of devices filtered by name, brand, or state.\nOptional filters: ?name=string, ?brand=string, ?state=string.")
+                .Produces<IEnumerable<Device>>(StatusCodes.Status200OK);
 
-            group.MapPost("/", CreateDevice);
+            group.MapGet("/{id:int}", GetDeviceById)
+                .WithSummary("Get device by ID")
+                .WithDescription("Returns a single device by its ID.")
+                .Produces<Device>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status404NotFound);
 
-            group.MapPut("/{id:int}", UpdateDevice);
+            group.MapPost("/", CreateDevice)
+                .WithSummary("Create device")
+                .WithDescription("Creates a new device and returns it.")
+                .Accepts<DeviceCreateDTO>("application/json")
+                .Produces<Device>(StatusCodes.Status201Created)
+                .Produces(StatusCodes.Status400BadRequest);
+
+            group.MapPut("/{id:int}", UpdateDevice)
+                .WithSummary("Update device")
+                .WithDescription("Updates fields name, brand and state of an existing device.")
+                .Accepts<DeviceUpdateDTO>("application/json")
+                .Produces<Device>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest)
+                .Produces(StatusCodes.Status404NotFound)
+                .Produces(StatusCodes.Status409Conflict);
             
-            group.MapDelete("/{id:int}", DeleteDeviceById);
+            group.MapDelete("/{id:int}", DeleteDeviceById)
+                .WithSummary("Delete device")
+                .WithDescription("Deletes a device unless it is in use.")
+                .Produces(StatusCodes.Status204NoContent)
+                .Produces(StatusCodes.Status409Conflict);
 
             return group;
+        }
+        
+        public static async Task<IResult> QueryDevices(IDeviceService service, string? name, string? brand, string? state)
+        {
+            var devices = await service.QueryAsync(name, brand, state);
+            return Results.Ok(devices);
         }
 
         public static async Task<IResult> GetDeviceById(IDeviceService service, int id)
@@ -30,20 +60,6 @@ namespace DeviceApi.Handlers
             return device is not null 
                 ? Results.Ok(device)
                 : Results.NotFound();
-        }
-
-        public static async Task<IResult> DeleteDeviceById(IDeviceService service, int id)
-        {
-            var result = await service.DeleteAsync(id);
-            return result is DeleteResult.NotAllowed
-                ? Results.Conflict("Device in use")
-                : Results.NoContent();
-        }
-        
-        public static async Task<IResult> QueryDevices(IDeviceService service, string? name, string? brand, string? state)
-        {
-            var devices = await service.QueryAsync(name, brand, state);
-            return Results.Ok(devices);
         }
         
         public static async Task<IResult> CreateDevice(IDeviceService service, DeviceCreateDTO deviceCreateDTO)
@@ -84,5 +100,12 @@ namespace DeviceApi.Handlers
             };
         }
 
+        public static async Task<IResult> DeleteDeviceById(IDeviceService service, int id)
+        {
+            var result = await service.DeleteAsync(id);
+            return result is DeleteResult.NotAllowed
+                ? Results.Conflict("Device in use")
+                : Results.NoContent();
+        }
     }
 }
