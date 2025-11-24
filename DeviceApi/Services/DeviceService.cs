@@ -32,23 +32,23 @@ namespace DeviceApi.Services
             return device; //TODO: fix this saved?
         }
 
-        public async Task<UpdateResult> UpdateAsync(int id, Device update)
+        public async Task<(UpdateResult, Device?)> UpdateAsync(int id, Device update)
         {
             var saved = await dbContext.Devices.FindAsync(id);
             if (saved == null)
             {
-                return UpdateResult.NotFound;
+                return (UpdateResult.NotFound, null);
             }
 
             if (update.State != null && IsStateValid(update.State))
             {
-                return UpdateResult.InvalidState;
+                return (UpdateResult.InvalidState, saved);
             }
 
             if (saved.State == DeviceStates.InUse &&
                 (update.Brand != null || update.Name != null))
             {
-                return UpdateResult.IsInUse;
+                return (UpdateResult.IsInUse, saved);
             }
 
             saved.Name = update.Name ?? saved.Name;
@@ -57,7 +57,7 @@ namespace DeviceApi.Services
             
             await dbContext.SaveChangesAsync();
 
-            return UpdateResult.Updated;
+            return (UpdateResult.Updated, saved);
         }
         
         public async Task<DeleteResult> DeleteAsync(int id)

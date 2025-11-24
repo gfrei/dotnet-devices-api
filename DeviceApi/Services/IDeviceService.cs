@@ -7,7 +7,7 @@ namespace DeviceApi.Services
     {
         Task<Device?> GetByIdAsync(int id);
         Task<Device?> CreateAsync(Device device);
-        Task<UpdateResult> UpdateAsync(int id, Device update);
+        Task<(UpdateResult, Device?)> UpdateAsync(int id, Device update);
         Task<DeleteResult> DeleteAsync(int id);
         Task<IEnumerable<Device>> QueryAsync(string? name, string? brand, string? state);
     }

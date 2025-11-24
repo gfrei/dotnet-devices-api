@@ -73,14 +73,14 @@ namespace DeviceApi.Handlers
                 State = deviceUpdateDTO.State,
             };
 
-            var status = await service.UpdateAsync(id, update);
+            (var status, var device) = await service.UpdateAsync(id, update);
 
             return status switch
             {
                 UpdateResult.NotFound => Results.NotFound(),
                 UpdateResult.InvalidState => Results.BadRequest($"State should be {DeviceStates.Available}, {DeviceStates.InUse}, or {DeviceStates.Inactive}."),
                 UpdateResult.IsInUse => Results.Conflict("Device is in use, cannot update name nor brand."),
-                _ => Results.Ok(update),
+                _ => Results.Ok(device),
             };
         }
 
