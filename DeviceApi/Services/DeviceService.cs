@@ -29,7 +29,7 @@ namespace DeviceApi.Services
 
             var saved = dbContext.Devices.Add(device);
             await dbContext.SaveChangesAsync();
-            return device; //TODO: fix this saved?
+            return saved.Entity;
         }
 
         public async Task<(UpdateResult, Device?)> UpdateAsync(int id, Device update)
