@@ -130,7 +130,7 @@ namespace DeviceApi.Tests.Handlers
             var mockService = new Mock<IDeviceService>();
             mockService
                 .Setup(s => s.DeleteAsync(It.IsAny<int>()))
-                .ReturnsAsync(DeleteResult.NowAllowed);
+                .ReturnsAsync(DeleteResult.NotAllowed);
 
             // Act
             var result = await DeviceHandlers.DeleteDeviceById(mockService.Object, 1);

@@ -68,7 +68,7 @@ namespace DeviceApi.Services
                 return DeleteResult.NotFound;
 
             if (device.State == DeviceStates.InUse)
-                return DeleteResult.NowAllowed;
+                return DeleteResult.NotAllowed;
 
             dbContext.Devices.Remove(device);
             await dbContext.SaveChangesAsync();

@@ -174,7 +174,7 @@ namespace DeviceApi.Tests.Services
             // Assert
             var notDeletedDevice = await db.FindAsync<Device>(device.Id);
 
-            Assert.Equal(DeleteResult.NowAllowed, result);
+            Assert.Equal(DeleteResult.NotAllowed, result);
             Assert.NotNull(notDeletedDevice);
         }
     }

@@ -1,4 +1,4 @@
 namespace DeviceApi.Data
 {
-    public enum DeleteResult { Deleted, NotFound, NowAllowed}
+    public enum DeleteResult { Deleted, NotFound, NotAllowed}
 }
